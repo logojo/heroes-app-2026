@@ -4,10 +4,11 @@ import { cn } from "@/lib/utils"
 
 function Progress({
   className,
+  activeColor = "bg-primary",
   children,
   value,
   ...props
-}: ProgressPrimitive.Root.Props) {
+}: ProgressPrimitive.Root.Props & { activeColor?: string }) {
   return (
     <ProgressPrimitive.Root
       value={value}
@@ -16,18 +17,18 @@ function Progress({
       {...props}
     >
       {children}
-      <ProgressTrack>
-        <ProgressIndicator />
+      <ProgressTrack activeColor={activeColor}>
+        <ProgressIndicator activeColor={activeColor}/>
       </ProgressTrack>
     </ProgressPrimitive.Root>
   )
 }
 
-function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
+function ProgressTrack({ className, activeColor, ...props }: ProgressPrimitive.Track.Props & { activeColor: string }) {
   return (
     <ProgressPrimitive.Track
       className={cn(
-        "relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-muted",
+        "relative flex h-2 w-full items-center overflow-x-hidden rounded-full bg-muted",
         className
       )}
       data-slot="progress-track"
@@ -38,12 +39,13 @@ function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
 
 function ProgressIndicator({
   className,
+  activeColor,
   ...props
-}: ProgressPrimitive.Indicator.Props) {
+}: ProgressPrimitive.Indicator.Props & { activeColor: string }) {
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn("h-full bg-primary transition-all", className)}
+      className={cn("h-full bg-primary transition-all", className, activeColor)}
       {...props}
     />
   )

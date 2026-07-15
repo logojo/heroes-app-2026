@@ -13,7 +13,7 @@ export interface Hero {
 
 }
 
-interface Hability {
+export interface Hability {
     name: string;
     level: number;
 }

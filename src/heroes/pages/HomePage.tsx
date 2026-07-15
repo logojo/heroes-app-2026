@@ -1,15 +1,12 @@
-import {
-  Heart,
-  ChevronLeft,
-  ChevronRight,
-  MoreHorizontal,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import CustomJumbotrom from "@/components/custom/CustomJumbotrom"
+import Pagination from "@/components/custom/Pagination"
+
 import { HeroStats } from "../components/HeroStats"
 import { HeroGrid } from "../components/HeroGrid"
+
 import type { Hero } from "../interfaces/hero.interface"
 
 const heroes : Hero[] = [
@@ -23,7 +20,7 @@ const heroes : Hero[] = [
     afiliation: 'Justice League',
     description: 'The Dark Knight of Gotham City, using fear as a weapon against crime and corruption.',
     habilities: [
-      {name: 'Strength', level: 60},
+      {name: 'Strength', level: 80},
       {name: 'Intelligence', level: 100},
       {name: 'Speed', level: 60},
       {name: 'Durability', level: 70},
@@ -33,7 +30,10 @@ const heroes : Hero[] = [
   }
 ]
 
+type tabs = "all" | "favorites" | "heroes" | "villains"
+
 export default function Homepage() {
+  const [activeTab, setActiveTab] = useState<tabs>("all")
   return (
     <>
         {/* Header */}
@@ -46,16 +46,26 @@ export default function Homepage() {
         <HeroStats />
 
         {/* Tabs */}
-        <Tabs value="all" className="mb-8">
+        <Tabs value={activeTab} className="mb-8">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all">All Characters (16)</TabsTrigger>
-            <TabsTrigger value="favorites" className="flex items-center gap-2">
-              <Heart className="h-4 w-4" />
+            <TabsTrigger value="all" onClick={() => setActiveTab("all")}>
+              All Characters (16)
+            </TabsTrigger>
+            <TabsTrigger value="favorites" onClick={() => setActiveTab("favorites")}>
               Favorites (3)
             </TabsTrigger>
-            <TabsTrigger value="heroes">Heroes (12)</TabsTrigger>
-            <TabsTrigger value="villains">Villains (2)</TabsTrigger>
+            <TabsTrigger value="heroes" onClick={() => setActiveTab("heroes")}>
+              Heroes (12)
+            </TabsTrigger>
+            <TabsTrigger value="villains" onClick={() => setActiveTab("villains")}>
+              Villains (2)
+            </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="all">All Characters</TabsContent>
+          <TabsContent value="favorites">Favoritos!!!</TabsContent>
+          <TabsContent value="heroes">Heroes</TabsContent>
+          <TabsContent value="villains">Villains</TabsContent>
         </Tabs>
 
         {/* Character Grid */}
@@ -64,30 +74,7 @@ export default function Homepage() {
         />
 
         {/* Pagination */}
-        <div className="flex items-center justify-center space-x-2">
-          <Button variant="outline" size="sm" disabled>
-            <ChevronLeft className="h-4 w-4" />
-            Previous
-          </Button>
-
-          <Button variant="default" size="sm">
-            1
-          </Button>
-          <Button variant="outline" size="sm">
-            2
-          </Button>
-          <Button variant="outline" size="sm">
-            3
-          </Button>
-          <Button variant="ghost" size="sm" disabled>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-
-          <Button variant="outline" size="sm">
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+        <Pagination totalPages={8}/>
   
     </>
   )
