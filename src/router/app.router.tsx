@@ -6,7 +6,7 @@ import HomePage from "@/heroes/pages/HomePage";
 import HeroPage from "@/heroes/pages/HeroPage";
 import HeroesLayout from "@/heroes/layouts/HeroesLayout";
 
-const SearchPage = lazy(() => import("@/heroes/pages/SearchPage"));
+const SearchPage = lazy(() => import("@/heroes/pages/search/SearchPage"));
 
 //rutas admin
 const AdminLayout = lazy(() => import("@/admin/layout/AdminLayout"));
