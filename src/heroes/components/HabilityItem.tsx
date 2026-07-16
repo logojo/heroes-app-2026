@@ -1,37 +1,46 @@
 import { Progress } from '@/components/ui/progress'
 import { Zap, Brain, Gauge, Shield } from 'lucide-react'
 
-import type { Hability } from '../interfaces/hero.interface'
-
-const icons = {
-    'strength': Gauge,
-    'intelligence': Brain,
-    'speed': Zap,
-    'durability': Shield
-}
-
-const colors = {
-    'strength': 'orange-500',
-    'intelligence': 'blue-500',
-    'speed': 'green-500',
-    'durability': 'purple-500'
-}
+const abilities = {
+    strength: {
+        icon: Gauge,
+        bg: "bg-orange-500",
+        text: "text-orange-500",
+    },
+    intelligence: {
+        icon: Brain,
+        bg: "bg-blue-500",
+        text: "text-blue-500",
+    },
+    speed: {
+        icon: Zap,
+        bg: "bg-green-500",
+        text: "text-green-500",
+    },
+    durability: {
+        icon: Shield,
+        bg: "bg-purple-500",
+        text: "text-purple-500",
+    },
+} as const;
 
 interface Props {
-    hability: Hability
+    ability: 'strength' | 'intelligence' | 'speed' | 'durability',
+    level: number
 }
 
 
-const HabilityItem = ({ hability }: Props) => {
-    const Icon = icons[hability.name.toLowerCase()];
-    const color = colors[hability.name.toLowerCase()];
+const HabilityItem = ({ ability , level }: Props) => {
+    const item = abilities[ability];
+    const Icon = item.icon;
+    
   return (
     <div className="space-y-1">
         <div className="flex items-center gap-1">
-        <Icon className={`h-3 w-3 text-${color}`} />
-        <span className="text-xs font-medium">{ hability.name }</span>
+        <Icon className={`h-3 w-3 ${item.text}`} />
+        <span className="text-xs font-medium">{ ability }</span>
         </div>
-        <Progress value={hability.level} className="h-2" activeColor={`bg-${color}`} />
+        <Progress value={level*10} className="h-2" activeColor={item.bg} />
     </div>
 )
 }

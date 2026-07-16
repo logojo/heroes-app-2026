@@ -15,15 +15,18 @@ const CustomMenu = () => {
             <NavigationMenuList>
 
                 <NavigationMenuItem>
-                    <NavigationMenuLink 
-                       className={ cn(isActive('/') && 'bg-slate-200 rounded-md', 'p-2')}
-                       render={<Link to="/">Home</Link>} />
+                    {/* <NavigationMenuLink className={ cn(isActive('/') && 'bg-slate-200 rounded-md', 'p-2 hover:bg-slate-200')}  
+                                        render={<Link to="/">Home</Link>}                                     
+                    /> */}
+                    <NavigationMenuLink className={  cn(navigationMenuTriggerStyle(), isActive('/') && 'bg-slate-200 rounded-md', 'p-2 hover:bg-slate-200') }  
+                                        render={<Link to="/">Home</Link>}                                     
+                    />
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                    <NavigationMenuLink 
-                      className={ cn(isActive('/search') && 'bg-slate-200 rounded-md', 'p-2')}
-                     render={<Link to="/search">Search</Link>} />
+                    <NavigationMenuLink className={ cn(navigationMenuTriggerStyle(), isActive('/search') && 'bg-slate-200 rounded-md', 'p-2 hover:bg-slate-200') }
+                                        render={<Link to="/search">Search</Link>}
+                    /> 
                 </NavigationMenuItem>
 
             </NavigationMenuList>
