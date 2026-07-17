@@ -1,33 +1,48 @@
-import { useState } from "react"
+import { useSearchParams } from "react-router"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { useQuery } from "@tanstack/react-query"
 import CustomJumbotrom from "@/components/custom/CustomJumbotrom"
-import Pagination from "@/components/custom/Pagination"
+import CustomPagination from "@/components/custom/Pagination"
 
 import { HeroStats } from "../components/HeroStats"
 import { HeroGrid } from "../components/HeroGrid"
 
-import { getHeroes } from "../actions/get-heroes.action"
 import { CustomSckeleton } from "@/components/custom/CustomSckeleton"
 import ErrorPage from "@/components/errors/ErrorPage"
-import type { HeroesResponse } from "../interfaces/hero.interface"
-import type { ApiError } from "../api/api-error"
+
+import { useHeroSummary } from "../hooks/useHeroSummary"
+import { useHeroes } from "../hooks/useHeroes"
 
 
-type tabs = "all" | "favorites" | "heroes" | "villains"
+const  TABS = ["all", "favorites", "hero", "villain"];
+type Tab = (typeof TABS)[number];
 
 export default function Homepage() {
-  const [activeTab, setActiveTab] = useState<tabs>("all");
+  const [ searchParams, setSearchParams ] = useSearchParams();
   
+  ///obteniendo los queryParametrer de la url
+  const activeTab = searchParams.get("tab") ?? 'all';
+  const page = searchParams.get("page") ?? '1';
+  const limit = searchParams.get("limit") ?? '2';
 
-  const { isPending, error, data: heroesResponse, refetch } = useQuery<HeroesResponse, ApiError>({
-    queryKey: ['heroes'],
-    queryFn: () => getHeroes(),
-    staleTime: 1000 * 60 * 5
-  })
+  //Validando que si se modifica en la url el tab siempre s eobtenga un valor correcto
+  const selectedTab: Tab =
+    TABS.includes(activeTab as Tab) ? (activeTab as Tab) : "all";
 
-   if ( isPending ) 
+  //modificando el url en base al tab seleccionado
+  const updateTab = (tab: Tab) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("tab", tab);
+      return params;
+    });
+  };
+
+  const { isPending, error, data: heroesResponse, refetch } = useHeroes(+page, +limit, activeTab )
+  const { data: summary } = useHeroSummary()
+
+  if ( isPending ) 
        return <CustomSckeleton />
 
   if (error) {
@@ -50,19 +65,19 @@ export default function Homepage() {
         <HeroStats />
 
         {/* Tabs */}
-        <Tabs value={activeTab} className="mb-8">
+        <Tabs value={selectedTab}>
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all" onClick={() => setActiveTab("all")}>
-              All Characters (16)
+            <TabsTrigger value="all" onClick={() => updateTab("all")}>
+              All Characters ({ summary?.totalHeroes })
             </TabsTrigger>
-            <TabsTrigger value="favorites" onClick={() => setActiveTab("favorites")}>
+            <TabsTrigger value="favorites"  onClick={() => updateTab("favorites")}>
               Favorites (3)
             </TabsTrigger>
-            <TabsTrigger value="heroes" onClick={() => setActiveTab("heroes")}>
-              Heroes (12)
+            <TabsTrigger value="hero"  onClick={() => updateTab("hero")}>
+              Heroes ({ summary?.heroCount })
             </TabsTrigger>
-            <TabsTrigger value="villains" onClick={() => setActiveTab("villains")}>
-              Villains (2)
+            <TabsTrigger value="villain"  onClick={() => updateTab("villain")}>
+              Villains ({ summary?.villainCount })
             </TabsTrigger>
           </TabsList>
 
@@ -73,27 +88,25 @@ export default function Homepage() {
           </TabsContent>
           <TabsContent value="favorites">
             <HeroGrid
-              heroes={ [] }
+               heroes={ heroesResponse.heroes }
             />
           </TabsContent>
-          <TabsContent value="heroes">
+          <TabsContent value="hero">
             <HeroGrid
-              heroes={ [] }
+               heroes={ heroesResponse.heroes }
             />
           </TabsContent>
-          <TabsContent value="villains">
+          <TabsContent value="villain">
             <HeroGrid
-              heroes={ [] }
+              heroes={ heroesResponse.heroes }
             />
           </TabsContent>
         </Tabs>
-        
-
-            
-          
 
         {/* Pagination */}
-        <Pagination totalPages={8}/>
+        <CustomPagination 
+          totalPages={heroesResponse.pages} 
+        />
   
     </>
   )

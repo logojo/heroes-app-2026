@@ -5,6 +5,7 @@ import { createBrowserRouter } from "react-router";
 import HomePage from "@/heroes/pages/HomePage";
 import HeroPage from "@/heroes/pages/HeroPage";
 import HeroesLayout from "@/heroes/layouts/HeroesLayout";
+import ErrorPage from '../components/errors/ErrorPage';
 
 const SearchPage = lazy(() => import("@/heroes/pages/search/SearchPage"));
 
@@ -23,13 +24,17 @@ export const appRouter = createBrowserRouter([
           element: <HomePage />
         },
         {
-          path: "/heroes/1",
+          path: "/heroes/:idSlug",
           element: <HeroPage />
         },
         {
           path: "/search",
           element: <SearchPage />
         },
+        {
+          path:'*',
+          element: <ErrorPage error='not-found' />
+        }
     ]
   },
   {

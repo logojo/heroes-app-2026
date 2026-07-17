@@ -10,10 +10,7 @@ export  const CompactErrorPage = ({ error, onRetry } : Props) => {
   
 
   return (
-    <section className="space-y-3">
-        <h2 className="text-sm font-medium text-muted-foreground">
-            Compact inline variant
-        </h2>
+    <section className="space-y-3 mb-3">
         <ErrorState
             variant={error}
             compact

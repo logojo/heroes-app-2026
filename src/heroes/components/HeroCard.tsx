@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router";
+
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Heart, Eye } from "lucide-react"
@@ -12,13 +14,20 @@ interface Props {
 }
 
 export const HeroCard = ({ hero }: Props) => {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+        navigate(`heroes/${hero.slug}`);
+  }
+
   return (
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-white to-gray-50">
         <div className="relative h-64">
             <img
                 src={ hero.image }
                 alt={ hero.alias }
-                className="object-cover transition-all duration-500 group-hover:scale-110 absolute -top-7.5 w-full h-102.5"
+                className="cursor-pointer object-cover transition-all duration-500 group-hover:scale-110 absolute -top-7.5 w-full h-102.5"
+                onClick={handleClick}
             />
 
             {/* Status indicator */}
