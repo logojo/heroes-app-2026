@@ -9,7 +9,10 @@ import { HeroStats } from "../components/HeroStats"
 import { HeroGrid } from "../components/HeroGrid"
 
 import { getHeroes } from "../actions/get-heroes.action"
-import { Spinner } from "@/components/ui/spinner"
+import { CustomSckeleton } from "@/components/custom/CustomSckeleton"
+import ErrorPage from "@/components/errors/ErrorPage"
+import type { HeroesResponse } from "../interfaces/hero.interface"
+import type { ApiError } from "../api/api-error"
 
 
 type tabs = "all" | "favorites" | "heroes" | "villains"
@@ -18,15 +21,21 @@ export default function Homepage() {
   const [activeTab, setActiveTab] = useState<tabs>("all");
   
 
-  const { isPending, isLoading, error, data: heroesResponse } = useQuery({
+  const { isPending, error, data: heroesResponse, refetch } = useQuery<HeroesResponse, ApiError>({
     queryKey: ['heroes'],
     queryFn: () => getHeroes(),
     staleTime: 1000 * 60 * 5
   })
 
-   if (isPending) return 'Loading...'
+   if ( isPending ) 
+       return <CustomSckeleton />
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (error) {
+     return <ErrorPage 
+      error={error.variant} //enviando la variante del error
+      onRetry={refetch}
+    />
+  }
 
   
   return (

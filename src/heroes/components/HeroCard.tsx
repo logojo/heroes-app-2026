@@ -16,7 +16,7 @@ export const HeroCard = ({ hero }: Props) => {
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-white to-gray-50">
         <div className="relative h-64">
             <img
-                src={hero.image}
+                src={ hero.image }
                 alt={ hero.alias }
                 className="object-cover transition-all duration-500 group-hover:scale-110 absolute -top-7.5 w-full h-102.5"
             />
